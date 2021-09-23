@@ -6,7 +6,7 @@ class Bip39:
     """ Mnemnonic code for generating deterministic keys """
 
     # Ref: https://github.com/bitcoin/bips/blob/master/bip-0039/english.txt
-    words = ['abandon', 'ability', 'able', 'about', 'above', 'absent', 'absorb', 'abstract', 'absurd', 'abuse',
+    WORDS = ['abandon', 'ability', 'able', 'about', 'above', 'absent', 'absorb', 'abstract', 'absurd', 'abuse',
              'access', 'accident', 'account', 'accuse', 'achieve', 'acid', 'acoustic', 'acquire', 'across', 'act',
              'action', 'actor', 'actress', 'actual', 'adapt', 'add', 'addict', 'address', 'adjust', 'admit', 'adult',
              'advance', 'advice', 'aerobic', 'affair', 'afford', 'afraid', 'again', 'age', 'agent', 'agree', 'ahead',
@@ -197,10 +197,10 @@ class Bip39:
     def mnemonics_to_seed(mnemonics: List[str], passphrase: str = '') -> bytes:
         assert len(mnemonics) == 24
 
-        # Convert Bip39.words into dict
-        assert len(Bip39.words) == 2 ** 11 == 2048
+        # Convert Bip39.WORDS into a dict
+        assert len(Bip39.WORDS) == 2 ** 11 == 2048
         word_map: Dict[str, int] = {}
-        for index, word in enumerate(Bip39.words):
+        for index, word in enumerate(Bip39.WORDS):
             word_map[word] = index
 
         # Convert mnemonics into 256-bit entropy + 8-bit chksum
@@ -219,7 +219,7 @@ class Bip39:
         # Generate seed
         mnemonics_in_str: str = ' '.join(mnemonics)
         salt: str = 'mnemonic' + passphrase
-        seed = hashlib.pbkdf2_hmac(hash_name='sha512', password=mnemonics_in_str.encode('utf-8'),
-                                   salt=salt.encode('utf-8'), iterations=2048)
+        seed: bytes = hashlib.pbkdf2_hmac(hash_name='sha512', password=mnemonics_in_str.encode('utf-8'),
+                                          salt=salt.encode('utf-8'), iterations=2048)
         assert len(seed) == 64
         return seed
