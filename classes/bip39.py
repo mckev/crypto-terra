@@ -194,7 +194,7 @@ class Bip39:
              'write', 'wrong', 'yard', 'year', 'yellow', 'you', 'young', 'youth', 'zebra', 'zero', 'zone', 'zoo']
 
     @staticmethod
-    def mnemonics_to_seed(mnemonics: List[str], password: str = '') -> bytes:
+    def mnemonics_to_seed(mnemonics: List[str], passphrase: str = '') -> bytes:
         assert len(mnemonics) == 24
 
         # Convert Bip39.words into dict
@@ -218,7 +218,7 @@ class Bip39:
 
         # Generate seed
         mnemonics_in_str: str = ' '.join(mnemonics)
-        salt: str = 'mnemonic' + password
+        salt: str = 'mnemonic' + passphrase
         seed = hashlib.pbkdf2_hmac(hash_name='sha512', password=mnemonics_in_str.encode('utf-8'),
                                    salt=salt.encode('utf-8'), iterations=2048)
         assert len(seed) == 64
