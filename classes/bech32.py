@@ -1,22 +1,10 @@
 from typing import List, Optional
 
+from classes.util import Util
+
 
 class Bech32:
     CHARSET = 'qpzry9x8gf2tvdw0s3jn54khce6mua7l'
-
-    @staticmethod
-    def base32encode(data: bytes) -> List[int]:
-        # Ref: https://asecuritysite.com/encryption/bit_keys
-        # Convert into number
-        n = 0
-        for c in data:
-            n = n * 256 + c
-        # Convert number into base-32
-        data_in_base32: List[int] = []
-        while n > 0:
-            data_in_base32.insert(0, n % 32)
-            n = n // 32
-        return data_in_base32
 
     @staticmethod
     def bech32_polymod(data_in_base32: List[int]) -> int:
@@ -45,7 +33,7 @@ class Bech32:
 
     @staticmethod
     def bech32_encode(hrp: str, witver: Optional[int], data: bytes) -> str:
-        data_in_base32: List[int] = Bech32.base32encode(data)
+        data_in_base32: List[int] = Util.split_bits(data, 5)
         if witver is not None:
             data_in_base32 = [witver] + data_in_base32
         data_in_base32 += Bech32.bech32_create_checksum(hrp, data_in_base32)

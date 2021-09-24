@@ -2,21 +2,15 @@ import unittest
 from typing import List
 
 from classes.bech32 import Bech32
+from classes.util import Util
 
 
 class TestBech32(unittest.TestCase):
 
-    def test_base32encode(self):
+    def test_bech32_create_checksum(self):
         # Ref: https://en.bitcoin.it/wiki/Bech32
         data: bytes = bytes.fromhex('751e76e8199196d454941c45d1b3a323f1433bd6')
-        data_in_base32: List[int] = Bech32.base32encode(data)
-        expected: List[int] = [14, 20, 15, 7, 13, 26, 0, 25, 18, 6, 11, 13, 8, 21, 4, 20, 3, 17, 2, 29, 3, 12,
-                               29, 3, 4, 15, 24, 20, 6, 14, 30, 22]
-        self.assertEqual(data_in_base32, expected)
-
-    def test_bech32_create_checksum(self):
-        data: bytes = bytes.fromhex('751e76e8199196d454941c45d1b3a323f1433bd6')
-        data_in_base32: List[int] = Bech32.base32encode(data)
+        data_in_base32: List[int] = Util.split_bits(data, 5)
         witver: int = 0
         data_in_base32 = [witver] + data_in_base32
         chksum: List[int] = Bech32.bech32_create_checksum('bc', data_in_base32)

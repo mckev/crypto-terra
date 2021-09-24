@@ -1,5 +1,8 @@
 import hashlib
+import secrets
 from typing import List, Dict
+
+from classes.util import Util
 
 
 class Bip39:
@@ -207,7 +210,7 @@ class Bip39:
         entropy_and_chksum_in_bin: str = ''
         for word in mnemonics:
             index = word_map[word]
-            entropy_and_chksum_in_bin += bin(index)[2:].zfill(11)
+            entropy_and_chksum_in_bin += bin(index).lstrip('0b').zfill(11)
         assert len(entropy_and_chksum_in_bin) == 256 + 8
         entropy_and_chksum: bytes = int(entropy_and_chksum_in_bin, 2).to_bytes(33, byteorder='big')
         entropy: bytes = entropy_and_chksum[:-1]
@@ -223,3 +226,19 @@ class Bip39:
                                           salt=salt.encode('utf-8'), iterations=2048)
         assert len(seed) == 64
         return seed
+
+    @staticmethod
+    def generate_random_mnemonics() -> List[str]:
+        # Generate 256-bit entropy + 8-bit chksum
+        entropy: bytes = secrets.token_bytes(nbytes=32)
+        chksum: bytes = hashlib.sha256(entropy).digest()
+        entropy_and_chksum: bytes = entropy + chksum[0:1]
+        assert len(entropy_and_chksum) == 33
+
+        # Generate Mnemonics
+        entropy_and_chksum_in_base2048 = Util.split_bits(entropy_and_chksum, 11)
+        mnemonics: List[str] = []
+        for index in entropy_and_chksum_in_base2048:
+            mnemonics.append(Bip39.WORDS[index])
+        assert len(mnemonics) == 24
+        return mnemonics
