@@ -11,7 +11,9 @@ class Util:
         for i in b:
             binary += bin(i).lstrip('0b').zfill(8)
         # Split
-        parts = [binary[i:i + n] for i in range(0, len(binary), n)]
-        # Convert to integers
-        parts = [int(part, 2) for part in parts]
+        parts: List[int] = []
+        while len(binary) > 0:
+            part: str = binary[-n:]
+            parts.insert(0, int(part, 2))
+            binary = binary[:-n]
         return parts
