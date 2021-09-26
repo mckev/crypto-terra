@@ -198,6 +198,7 @@ class Bip39:
 
     @staticmethod
     def mnemonics_to_seed(mnemonics: List[str], passphrase: str = '') -> bytes:
+        # Ref: https://medium.com/coinmonks/mnemonic-generation-bip39-simply-explained-e9ac18db9477
         assert len(mnemonics) == 24
 
         # Convert Bip39.WORDS into a dict

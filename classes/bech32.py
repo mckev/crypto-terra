@@ -9,6 +9,7 @@ class Bech32:
     @staticmethod
     def bech32_polymod(data_in_base32: List[int]) -> int:
         # Compute the Bech32 checksum
+        # Ref: https://github.com/fiatjaf/bech32/blob/master/bech32/__init__.py
         generator = [0x3b6a57b2, 0x26508e6d, 0x1ea119fa, 0x3d4233dd, 0x2a1462b3]
         chk: int = 1
         for value in data_in_base32:

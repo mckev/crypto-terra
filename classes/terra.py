@@ -10,6 +10,7 @@ class Terra:
 
     @staticmethod
     def create_terra_address(public_key: bytes) -> str:
+        # Ref: https://github.com/terra-money/station-electron/blob/main/public/wallet.js
         ripemd160 = hashlib.new('ripemd160')
         ripemd160.update(hashlib.sha256(public_key).digest())
         public_key_hashed = ripemd160.digest()

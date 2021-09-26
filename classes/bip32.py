@@ -12,6 +12,7 @@ class Bip32:
 
     @staticmethod
     def from_seed(seed: bytes):
+        # Ref: https://github.com/darosior/python-bip32/blob/master/bip32/bip32.py
         secret: bytes = hmac.new(key=b'Bitcoin seed', msg=seed, digestmod=hashlib.sha512).digest()
         chain_code: bytes = secret[32:]
         private_key: bytes = secret[:32]
@@ -19,6 +20,7 @@ class Bip32:
 
     @staticmethod
     def derive_keypair(chain_code: bytes, private_key: bytes, bip: int = None):
+        # Ref: https://github.com/darosior/python-bip32/blob/master/bip32/utils.py
         if bip is None:
             path: str = "m/44'/330'/0'/0/0"
         else:
